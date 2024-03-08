@@ -6,7 +6,12 @@
   "license": "MIT",
   "dependencies": {
     "better-sqlite3": "^9.4.3",
-    "node-html-parser": "^6.1.12",
-    "sqlite3": "^5.1.7"
+    "node-html-parser": "^6.1.12"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0"
+  },
+  "scripts": {
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
   }
 }

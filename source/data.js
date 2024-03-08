@@ -16,7 +16,7 @@ export function createSchema() {
     db.exec(DB_SCHEMA);
 
 }
-export function addArticle(filename, title, date, author, content, tags) {
+export function addArticle({filename, title, date, author, content, tags}) {
     const stmt = db.prepare(DB_INSERT_ARTICLE);
     stmt.run({
         filename: filename,
