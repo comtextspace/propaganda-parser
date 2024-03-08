@@ -11,9 +11,9 @@ import htmlParser from 'node-html-parser';
 export function htmlToArticle(html, filename) {
     const root = htmlParser.parse(html);
 
-    const authors = root.querySelectorAll('.author');
+    const titles = root.querySelectorAll('.zagolovok');
 
-    if (authors.length == 10) {
+    if (titles.length != 1) {
         return
     }
     
@@ -37,8 +37,15 @@ export function htmlToArticle(html, filename) {
 
         const links = article_node.querySelectorAll('a');
         for (const link of links) {
+
+            let url;
             
-            const url = new URL(link.attributes['href'], 'http://test.ru');
+            try {
+                url = new URL(link.attributes['href'], 'http://test.ru');
+            } catch (err) {
+                continue;
+            }
+
             const linkPath = url.pathname;
             const linkHash = url.hash;
 

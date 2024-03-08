@@ -24,18 +24,33 @@ let indexPageContent = `# Архив сайта журнала Пропаган�
 openDb();
 createSchema();
 
-inputFiles.slice(0, 200).forEach(filename => {
+console.log('start parsing');
+
+let count = 0;
+
+inputFiles.forEach(filename => {
     const ext = path.extname(filename)
     if (ext === '.html') {
         const fileContent = fs.readFileSync(path.join(BASE_FOLDER, filename));
+        
+        try {
+            const article = htmlToArticle(fileContent, filename);
 
-        const article = htmlToArticle(fileContent, filename);
-
-        if (article) {
-            addArticle(article);
-        }        
+            if (article) {
+                addArticle(article);
+            }
+        } catch(err) {
+            console.log(filename);
+            console.log(err);
+        }
+    }
+    count += 1;
+    if (count % 1000 == 0) {
+        console.log(`Finished parsing ${count} files`);
     }
   });
+
+console.log('finish parsing');
 
 makeFiles(OUT_FOLDER);
 makeIndex(OUT_FOLDER);

@@ -57,9 +57,9 @@ function makeArticle({title, date, author, content}) {
 function makeYAML(title, date, author) {
     return '' +
 `---
-title: ${title}
-date: ${date}
-author: ${author}
+title: "${title}"
+date: "${date}"
+author: "${author}"
 ---`
 }
 
