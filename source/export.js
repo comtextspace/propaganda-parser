@@ -3,11 +3,13 @@ import path from 'path';
 
 /* Project modules */
 
-import {getArticles} from './data.js';
+import {getArticles, getArticleIndex} from './data.js';
 
 /* Constants */
 
 const INDEX_FILENAME = 'index.md';
+
+const INDEX_HEADER = `# Архив сайта журнала Пропаганда (propaganda-journal.net)`;
 
 /* Export */
 
@@ -21,9 +23,15 @@ export function makeFiles(outPath) {
 }
 
 export function makeIndex(outPath) {
-    let indexPageContent = '';
+    let indexPageContent = INDEX_HEADER;
+    let lastShortdate = '';
 
-    getArticles().forEach(({filename, title, date}) => {
+    getArticleIndex().forEach(({shortdate, filename, title, date}) => {
+        if (lastShortdate != shortdate) {
+            lastShortdate = shortdate;
+            indexPageContent += `\n\n# ${shortdate}\n`;
+        }
+
         indexPageContent += `
 * [${title}](${filename}) (${date})`
     });

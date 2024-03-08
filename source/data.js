@@ -33,6 +33,12 @@ export function getArticles() {
     return stmt.all();
 }
 
+export function getArticleIndex() {
+    const stmt = db.prepare(DB_SELECT_ARTICLE_INDEX);
+    return stmt.all();
+}
+
+
 const DB_SCHEMA =
 `
 drop table if exists article;
@@ -55,4 +61,18 @@ values(:filename, :title, :date, :author, :content, :tags);
 
 const DB_SELECT_ARTICLE = `
 select * from article;
+`
+
+const DB_SELECT_ARTICLE_INDEX = `
+select 
+  strftime('%Y-%m', date) as shortdate, 
+  filename, 
+  date, 
+  title, 
+  author
+from 
+  article a 
+order by 
+  date desc, 
+  title;
 `
