@@ -3,8 +3,8 @@ import path from 'path';
 
 import htmlParser from 'node-html-parser';
 
-import {openDb, closeDb, createSchema} from './data.js';
-
+import {openDb, closeDb, createSchema, addArticle} from './source/data.js';
+import {makeFiles, makeIndex} from './source/export.js';
 
 const BASE_FOLDER = './site/';
 const OUT_FOLDER = './site_out/';
@@ -22,11 +22,6 @@ let indexPageContent = `# Архив сайта журнала Пропаган�
 
 openDb();
 createSchema();
-
-function addToIndex(filename, title, date) {
-    indexPageContent += `
-* [${title}](${filename}) (${date})`
-}
 
 inputFiles.slice(0, 200).forEach(filename => {
     const ext = path.extname(filename)
@@ -76,39 +71,12 @@ inputFiles.slice(0, 200).forEach(filename => {
             const text = article_node.text.trim().replaceAll('\n', '\n\n');
 
             const newFilename = path.parse(filename).name + ".md";
-            saveDocument(newFilename, title, date, author, text);
-            addToIndex(filename, title, date); 
+            addArticle(newFilename, title, date, author, text, tags);
         }
     }
   });
 
-fs.writeFileSync(OUT_FOLDER + 'index.md', indexPageContent);
-
-function makeYAML(title, date, author) {
-    return '' +
-`---
-title: ${title}
-date: ${date}
-author: ${author}
----`
-}
-
-function makeHeader(title, date, author) {
-    return '' +
-`# ${title}
-
-**${date}** ${author}`
-}
-
-
-function saveDocument(filename, title, date, author, text) {
-    const fileContent = makeYAML(title, date, author) 
-    + '\n\n'
-    + makeHeader(title, date, author)
-    + '\n\n'
-    + text;
-    
-    fs.writeFileSync(OUT_FOLDER + filename, fileContent)
-}
+makeFiles(OUT_FOLDER);
+makeIndex(OUT_FOLDER);
 
 closeDb();
