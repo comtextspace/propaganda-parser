@@ -1,8 +1,11 @@
+import fs from 'fs'
 import path from 'path';
 
 import htmlParser from 'node-html-parser';
 
 /* Project modules */
+
+import {addArticle} from './data.js';
 
 /* Constants */
 
@@ -72,4 +75,39 @@ export function htmlToArticle(html, filename) {
             content: text,
             tags
         };
+}
+
+export function readFiles(basePath, inputFilenames, showBadFiles) {
+
+    let count = 0;
+
+    inputFilenames.forEach(filename => {
+        const ext = path.extname(filename)
+        if (ext === '.html') {
+            const fileContent = fs.readFileSync(path.join(basePath, filename));
+            
+            try {
+                const article = htmlToArticle(fileContent, filename);
+    
+                if (article) {
+                    addArticle(article);
+                } else {
+                    if (showBadFiles) {
+                        console.log(filename);
+                    }
+                }
+            } catch(err) {
+                console.log(filename);
+                console.log(err);
+            }
+        } else {
+            if (showBadFiles) {
+                console.log(filename);
+            }
+        }
+        count += 1;
+        if (count % 1000 == 0) {
+            console.log(`Finished parsing ${count} files`);
+        }
+      });
 }

@@ -1,58 +1,63 @@
 import fs from 'fs';
 import path from 'path';
 
-import htmlParser from 'node-html-parser';
+import { Command }  from 'commander';
 
 import {openDb, closeDb, createSchema, addArticle} from './source/data.js';
 import {makeFiles, makeIndex} from './source/export.js';
-import {htmlToArticle} from './source/import.js';
+import {readFiles} from './source/import.js';
 
-const BASE_FOLDER = './site/';
-const OUT_FOLDER = './site_out/';
+const INPUT_PATH = './site/';
+const OUTPUT_PATH = './site_out/';
 
+const program = new Command();
 
-const FILES = './files.txt';
+program
+  .name('Propaganda-parser')
+  .description('Программа для конвертации сайта журнала Пропаганда в Markdown')
+  .version('0.1.0');
 
-const inputFiles = fs.readdirSync(BASE_FOLDER);
-
-console.log('Input files: ' + inputFiles.length)
-
-let indexPageContent = `# Архив сайта журнала Пропаганда (propaganda-journal.net)
-
-`;
-
-openDb();
-createSchema();
-
-console.log('start parsing');
-
-let count = 0;
-
-inputFiles.forEach(filename => {
-    const ext = path.extname(filename)
-    if (ext === '.html') {
-        const fileContent = fs.readFileSync(path.join(BASE_FOLDER, filename));
-        
-        try {
-            const article = htmlToArticle(fileContent, filename);
-
-            if (article) {
-                addArticle(article);
-            }
-        } catch(err) {
-            console.log(filename);
-            console.log(err);
-        }
-    }
-    count += 1;
-    if (count % 1000 == 0) {
-        console.log(`Finished parsing ${count} files`);
-    }
+program.command('import')
+  .description('Загрузка страниц в БД sqlite')
+  .option('--showBadFiles', 'Выводит в консоль неподходящие для конвертации файлы')
+  .option('-s, --source <string>', 'Каталог с исходными файлами', INPUT_PATH)
+  .action((options) => {
+    importInDb(options.source, options.showBadFiles);
   });
 
-console.log('finish parsing');
+program.command('export')
+  .description('Экспорт страниц из БД sqlite в Markdown-файлы')
+  .option('-dest, --dest <string>', 'Каталог куда сохранять файлы', OUTPUT_PATH)
+  .action((options) => {
+    exportFromDb(options.dest);
+  });
 
-makeFiles(OUT_FOLDER);
-makeIndex(OUT_FOLDER);
+program.parse();
 
-closeDb();
+function importInDb(sourcePath, showBadFiles) {
+    openDb();
+    createSchema();
+
+    console.log('start parsing');
+
+    const inputFiles = fs.readdirSync(sourcePath);
+    console.log('Input files: ' + inputFiles.length);
+
+    readFiles(sourcePath, inputFiles, showBadFiles);
+
+    console.log('finish parsing');
+    closeDb();
+}
+
+function exportFromDb(destPath) {
+    openDb();
+    createSchema();
+
+    console.log('start export');
+
+    makeFiles(destPath);
+    makeIndex(destPath);
+    
+    console.log('finish export');
+    closeDb();
+}
