@@ -57,9 +57,9 @@ function makeArticle({title, date, author, content}) {
 function makeYAML(title, date, author) {
   return '' +
 `---
-title: "${title}"
-date: "${date}"
-author: "${author}"
+title: "${escapeYamlFiled(title)}"
+date: "${escapeYamlFiled(date)}"
+author: "${escapeYamlFiled(author)}"
 ---`;
 }
 
@@ -68,4 +68,8 @@ function makeHeader(title, date, author) {
 `# ${title}
 
 **${date}** ${author}`;
+}
+
+function escapeYamlFiled(text) {
+  return text.replaceAll('"', '\\"')
 }

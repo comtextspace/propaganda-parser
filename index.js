@@ -38,7 +38,7 @@ function importInDb(sourcePath, showBadFiles) {
   openDb();
   createSchema();
 
-  console.log('start parsing');
+  console.log(`start parsing from path ${sourcePath}`);
 
   const inputFiles = fs.readdirSync(sourcePath);
   console.log('Input files: ' + inputFiles.length);
@@ -52,7 +52,7 @@ function importInDb(sourcePath, showBadFiles) {
 function exportFromDb(destPath) {
   openDb();
 
-  console.log('start export');
+  console.log(`start export in path ${destPath}`);
 
   makeFiles(destPath);
   makeIndex(destPath);
