@@ -2,6 +2,6 @@
 // https://jestjs.io/docs/en/configuration.html
 
 export default {
-    testEnvironment: 'jest-environment-node',
-    transform: {}
-  };
+  testEnvironment: 'jest-environment-node',
+  transform: {}
+};

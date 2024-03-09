@@ -1,41 +1,41 @@
-import sqlite3 from 'better-sqlite3';
+import Sqlite3 from 'better-sqlite3';
 
-const DB_FILENAME = './db.sqlite3'
+const DB_FILENAME = './db.sqlite3';
 
 let db;
 
 export function openDb() {
-    db = new sqlite3(DB_FILENAME);
+  db = new Sqlite3(DB_FILENAME);
 }
 
 export function closeDb() {
-    db.close();
+  db.close();
 }
 
 export function createSchema() {
-    db.exec(DB_SCHEMA);
+  db.exec(DB_SCHEMA);
 
 }
 export function addArticle({filename, title, date, author, content, tags}) {
-    const stmt = db.prepare(DB_INSERT_ARTICLE);
-    stmt.run({
-        filename: filename,
-        title: title,
-        date: date,
-        author: author,
-        content: content,
-        tags: tags
-      });    
+  const stmt = db.prepare(DB_INSERT_ARTICLE);
+  stmt.run({
+    filename: filename,
+    title: title,
+    date: date,
+    author: author,
+    content: content,
+    tags: tags
+  });    
 }
 
 export function getArticles() {
-    const stmt = db.prepare(DB_SELECT_ARTICLE);
-    return stmt.all();
+  const stmt = db.prepare(DB_SELECT_ARTICLE);
+  return stmt.all();
 }
 
 export function getArticleIndex() {
-    const stmt = db.prepare(DB_SELECT_ARTICLE_INDEX);
-    return stmt.all();
+  const stmt = db.prepare(DB_SELECT_ARTICLE_INDEX);
+  return stmt.all();
 }
 
 
@@ -57,11 +57,11 @@ create table article (
 const DB_INSERT_ARTICLE = `
 insert into article (filename, title, date, author, content, tags) 
 values(:filename, :title, :date, :author, :content, :tags);
-`
+`;
 
 const DB_SELECT_ARTICLE = `
 select * from article;
-`
+`;
 
 const DB_SELECT_ARTICLE_INDEX = `
 select 
@@ -75,4 +75,4 @@ from
 order by 
   date desc, 
   title;
-`
+`;

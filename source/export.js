@@ -14,30 +14,30 @@ const INDEX_HEADER = `# Архив сайта журнала Пропаганд�
 /* Export */
 
 export function makeFiles(outPath) {
-    getArticles().forEach(article => {
-        const fileContent = makeArticle(article);
+  getArticles().forEach(article => {
+    const fileContent = makeArticle(article);
 
-        const fullArticleFilename = path.join(outPath + article.filename);
-        fs.writeFileSync(fullArticleFilename, fileContent)
-    });
+    const fullArticleFilename = path.join(outPath + article.filename);
+    fs.writeFileSync(fullArticleFilename, fileContent);
+  });
 }
 
 export function makeIndex(outPath) {
-    let indexPageContent = INDEX_HEADER;
-    let lastShortdate = '';
+  let indexPageContent = INDEX_HEADER;
+  let lastShortdate = '';
 
-    getArticleIndex().forEach(({shortdate, filename, title, date}) => {
-        if (lastShortdate != shortdate) {
-            lastShortdate = shortdate;
-            indexPageContent += `\n\n# ${shortdate}\n`;
-        }
+  getArticleIndex().forEach(({shortdate, filename, title, date}) => {
+    if (lastShortdate != shortdate) {
+      lastShortdate = shortdate;
+      indexPageContent += `\n\n# ${shortdate}\n`;
+    }
 
-        indexPageContent += `
-* [${title}](${filename}) (${date})`
-    });
+    indexPageContent += `
+* [${title}](${filename}) (${date})`;
+  });
 
-    const fullIndexFilename = path.join(outPath, INDEX_FILENAME);
-    fs.writeFileSync(fullIndexFilename, indexPageContent);
+  const fullIndexFilename = path.join(outPath, INDEX_FILENAME);
+  fs.writeFileSync(fullIndexFilename, indexPageContent);
 }
 
 /* Inner functions */
@@ -45,27 +45,27 @@ export function makeIndex(outPath) {
 
 
 function makeArticle({title, date, author, content}) {
-    const article = makeYAML(title, date, author) 
+  const article = makeYAML(title, date, author) 
     + '\n\n'
     + makeHeader(title, date, author)
     + '\n\n'
     + content;
 
-    return article;
+  return article;
 }
 
 function makeYAML(title, date, author) {
-    return '' +
+  return '' +
 `---
 title: "${title}"
 date: "${date}"
 author: "${author}"
----`
+---`;
 }
 
 function makeHeader(title, date, author) {
-    return '' +
+  return '' +
 `# ${title}
 
-**${date}** ${author}`
+**${date}** ${author}`;
 }

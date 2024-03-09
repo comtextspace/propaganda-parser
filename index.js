@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 
-import { Command }  from 'commander';
+import { Command } from 'commander';
 
 import {openDb, closeDb, createSchema, addArticle} from './source/data.js';
 import {makeFiles, makeIndex} from './source/export.js';
@@ -35,28 +35,28 @@ program.command('export')
 program.parse();
 
 function importInDb(sourcePath, showBadFiles) {
-    openDb();
-    createSchema();
+  openDb();
+  createSchema();
 
-    console.log('start parsing');
+  console.log('start parsing');
 
-    const inputFiles = fs.readdirSync(sourcePath);
-    console.log('Input files: ' + inputFiles.length);
+  const inputFiles = fs.readdirSync(sourcePath);
+  console.log('Input files: ' + inputFiles.length);
 
-    readFiles(sourcePath, inputFiles, showBadFiles);
+  readFiles(sourcePath, inputFiles, showBadFiles);
 
-    console.log('finish parsing');
-    closeDb();
+  console.log('finish parsing');
+  closeDb();
 }
 
 function exportFromDb(destPath) {
-    openDb();
+  openDb();
 
-    console.log('start export');
+  console.log('start export');
 
-    makeFiles(destPath);
-    makeIndex(destPath);
+  makeFiles(destPath);
+  makeIndex(destPath);
     
-    console.log('finish export');
-    closeDb();
+  console.log('finish export');
+  closeDb();
 }
