@@ -51,7 +51,6 @@ function importInDb(sourcePath, showBadFiles) {
 
 function exportFromDb(destPath) {
     openDb();
-    createSchema();
 
     console.log('start export');
 

@@ -4,5 +4,8 @@ install:
 test:
 	yarn test
 
-run:
-	node ./index.js
+import:
+	node ./index.js import
+
+export:
+	node ./index.js export
