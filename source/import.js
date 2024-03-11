@@ -110,12 +110,13 @@ function prepareContent(text) {
   } 
   preparedText = preparedText.replaceAll(/\n\n(\n)+/gi, '\n\n');
 
-  preparedText = preparedText.replaceAll(/\n +([\wа-яА-Я])/gi, '\n$1');
+  preparedText = preparedText.replaceAll(/\n +([\wа-яА-Я\[])/gi, '\n$1');
 
   return preparedText;
 }
 
 function prepareLinks(element, pageFilename) {
+  const DUMMY_URL = 'http://test345245657.ru'
   const footnotesVisited = new Set();
 
   const links = element.querySelectorAll('a');
@@ -125,23 +126,46 @@ function prepareLinks(element, pageFilename) {
     let url;
             
     try {
-      url = new URL(link.attributes['href'], 'http://test.ru');
+      url = new URL(link.attributes['href'], DUMMY_URL);
     } catch (err) {
       continue;
     }
 
-    const linkPath = url.pathname;
-    const linkHash = url.hash;
+    if (isFootnoteLink(url, pageFilename)) {
+      
+      const linkHash = url.hash;
+      const footnoteNumber = link.textContent;
+      const preparedFootnoteNumber = footnoteNumber.replace('[', '').replace(']', '');
 
-    const footnoteNumber = link.textContent;
-    const preparedFootnoteNumber = footnoteNumber.replace('[', '').replace(']', '');
-    const footnoteMark = linkHash.endsWith('anc') ? ': ' : '';
-    const footnoteLink = `[^${preparedFootnoteNumber}]` + footnoteMark;
-
-    footnotesVisited.add(footnoteNumber);
-
-    if (linkPath == '/' + pageFilename) {
+      const footnoteMark = linkHash.endsWith('anc') ? ': ' : '';
+      
+      const footnoteLink = `[^${preparedFootnoteNumber}]` + footnoteMark;
+  
+      footnotesVisited.add(footnoteNumber);
+      
       link.textContent = footnoteLink;
+    } else {
+
+      if (link.textContent.length == 0) {
+        continue;
+      }
+
+      const preparedUrl = url.toString().replace(DUMMY_URL, '');
+
+      link.textContent = `[${link.textContent}](${preparedUrl})`;
     }
+
   }
+}
+
+function isFootnoteLink(url, pageFilename) {
+
+  if (url.pathname != '/' + pageFilename) {
+    return false;
+  }
+
+  return (url.hash.endsWith('anc')
+    || url.hash.endsWith('sym')
+    || url.hash.startsWith('#_ftn')
+  )
 }
