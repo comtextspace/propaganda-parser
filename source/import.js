@@ -36,32 +36,7 @@ export function htmlToArticle(html, filename) {
   authorNode.remove();
   tagsNode.remove();
 
-  const footnotesVisited = new Set();
-
-  const links = articleNode.querySelectorAll('a');
-  for (const link of links) {
-
-    let url;
-            
-    try {
-      url = new URL(link.attributes['href'], 'http://test.ru');
-    } catch (err) {
-      continue;
-    }
-
-    const linkPath = url.pathname;
-    const linkHash = url.hash;
-
-    const footnoteNumber = link.textContent;
-    const footnoteMark = linkHash.endsWith('anc') ? ': ' : '';
-    const footnoteLink = `[^${footnoteNumber}]` + footnoteMark;
-
-    footnotesVisited.add(footnoteNumber);
-
-    if (linkPath == '/' + filename) {
-      link.textContent = footnoteLink;
-    }
-  }
+  prepareLinks(articleNode, filename);
         
   const articleText = articleNode.text.trim().replaceAll('\n', '\n\n');
   const content = prepareContent(articleText);
@@ -138,4 +113,35 @@ function prepareContent(text) {
   preparedText = preparedText.replaceAll(/\n +([\wа-яА-Я])/gi, '\n$1');
 
   return preparedText;
+}
+
+function prepareLinks(element, pageFilename) {
+  const footnotesVisited = new Set();
+
+  const links = element.querySelectorAll('a');
+
+  for (const link of links) {
+
+    let url;
+            
+    try {
+      url = new URL(link.attributes['href'], 'http://test.ru');
+    } catch (err) {
+      continue;
+    }
+
+    const linkPath = url.pathname;
+    const linkHash = url.hash;
+
+    const footnoteNumber = link.textContent;
+    const preparedFootnoteNumber = footnoteNumber.replace('[', '').replace(']', '');
+    const footnoteMark = linkHash.endsWith('anc') ? ': ' : '';
+    const footnoteLink = `[^${preparedFootnoteNumber}]` + footnoteMark;
+
+    footnotesVisited.add(footnoteNumber);
+
+    if (linkPath == '/' + pageFilename) {
+      link.textContent = footnoteLink;
+    }
+  }
 }
