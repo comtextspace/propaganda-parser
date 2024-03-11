@@ -135,5 +135,7 @@ function prepareContent(text) {
   } 
   preparedText = preparedText.replaceAll(/\n\n(\n)+/gi, '\n\n');
 
+  preparedText = preparedText.replaceAll(/\n +([\wа-яА-Я])/gi, '\n$1');
+
   return preparedText;
 }
