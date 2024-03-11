@@ -29,3 +29,17 @@ test('htmlToArticle — 10080.html', () => {
   expect(article.filename).toBe('10080.md');
   expect(article.content).toBe(destContent);
 });
+
+test('htmlToArticle — 10080.html', () => {
+  const source = fs.readFileSync('./tests/fixtures/import/8860.html', "utf8");
+  const destContent = fs.readFileSync('./tests/fixtures/import/8860.md', "utf8");
+
+  const article = htmlToArticle(source, '8860.html');
+
+  expect(article.title).toBe('О наследии Чернышевского. Часть первая');
+  expect(article.date).toBe('2014-07-07');
+  expect(article.author).toBe('Mikołaj Zagorski');
+  expect(article.tags).toBe('история культура политика');
+  expect(article.filename).toBe('8860.md');
+  expect(article.content).toBe(destContent);
+});
