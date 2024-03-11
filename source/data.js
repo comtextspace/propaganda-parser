@@ -34,7 +34,6 @@ export function addArticle({filename, title, date, author, content, tags}) {
     content: preparedContent
   });
 
-
   const tagStmt = db.prepare(DB_INSERT_TAG);
 
   for (const tag of tags) {
@@ -58,6 +57,10 @@ export function getArticleIndex() {
   return stmt.all();
 }
 
+export function getTagIndex() {
+  const stmt = db.prepare(DB_SELECT_TAG_INDEX);
+  return stmt.all();
+}
 
 const DB_SCHEMA =
 `
@@ -127,6 +130,24 @@ where
 order by 
   a.date desc, 
   a.title;
+`;
+
+const DB_SELECT_TAG_INDEX = `
+select
+  coalesce(t.tag, 'Без тега') tag,
+  a.title,
+  a.filename,
+  a.author,
+  a.date
+from 
+  article a left join tag t
+    on a.filename = t.filename
+  left join ignore_files if on
+    a.filename = if.filename
+where
+  if.filename is null
+order BY 
+  t.tag;
 `;
 
 const DB_FILL_IGNORE_LIST = `

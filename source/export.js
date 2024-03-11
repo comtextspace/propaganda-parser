@@ -3,14 +3,18 @@ import path from 'path';
 
 /* Project modules */
 
-import {getArticles, getArticleIndex} from './data.js';
+import {getArticles, getArticleIndex, getTagIndex} from './data.js';
 
 /* Constants */
 
 const INDEX_FILENAME = 'index.md';
+const TAG_FILENAME = 'tag.md';
 
-const INDEX_HEADER = `# Архив сайта журнала Пропаганда (propaganda-journal.net)`;
+const INDEX_HEADER = `# Архив сайта журнала Пропаганда (propaganda-journal.net)
 
+* [Список тегов](${TAG_FILENAME})`;
+
+const TAG_HEADER = `# Теги\n\n`;
 /* Export */
 
 export function makeFiles(outPath) {
@@ -40,9 +44,41 @@ export function makeIndex(outPath) {
   fs.writeFileSync(fullIndexFilename, indexPageContent);
 }
 
+export function makeTagIndex(outPath) {
+  const tagLinks = new Map();
+
+  getTagIndex().forEach(({tag, title, filename, date}) => {
+    const tagFilename = tagToFilename(tag);
+    
+    if (!tagLinks.has(tagFilename)) {
+      tagLinks.set(tagFilename, []);
+    }
+
+    const link = `* [${title}](${filename}) (${date})`;
+    tagLinks.get(tagFilename).push(link);
+  });
+
+  const tagPageBody = [... tagLinks.keys()].map(tag => `* [${tag}](${tag}.md)`);;
+  const tagPageContent = TAG_HEADER + tagPageBody.join('\n');
+
+  const fullTagFilename = path.join(outPath, TAG_FILENAME);
+  fs.writeFileSync(fullTagFilename, tagPageContent);
+
+  for (const tagFilename of tagLinks.keys()) {
+
+    const tagBody = tagLinks.get(tagFilename).join('\n')
+    const tagPageContent = `# ${tagFilename}\n\n` + tagBody;
+  
+    const fullFilename = path.join(outPath, tagFilename + '.md');
+    fs.writeFileSync(fullFilename, tagPageContent);
+  }
+}
+
 /* Inner functions */
 
-
+function tagToFilename(tag) {
+  return tag.replace(/\+/gi, '_').replace(/\s/gi, '_').toLowerCase();
+}
 
 function makeArticle({title, date, author, content}) {
   const article = makeYAML(title, date, author) 
@@ -71,7 +107,7 @@ function makeHeader(title, date, author) {
 }
 
 function prepareAuthor(text) {
-  if (text.length == 0) {
+  if (text == null) {
     return 'Автор отсутствует';
   }
 

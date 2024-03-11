@@ -4,7 +4,7 @@ import path from 'path';
 import { Command } from 'commander';
 
 import {openDb, closeDb, createSchema, addArticle} from './source/data.js';
-import {makeFiles, makeIndex} from './source/export.js';
+import {makeFiles, makeIndex, makeTagIndex} from './source/export.js';
 import {readFiles} from './source/import.js';
 
 const INPUT_PATH = './site/';
@@ -56,6 +56,7 @@ function exportFromDb(destPath) {
 
   makeFiles(destPath);
   makeIndex(destPath);
+  makeTagIndex(destPath);
     
   console.log('finish export');
   closeDb();
