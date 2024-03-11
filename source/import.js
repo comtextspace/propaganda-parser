@@ -120,7 +120,7 @@ function prepareContent(text) {
 }
 
 function prepareLinks(element, pageFilename) {
-  const DUMMY_URL = 'http://test345245657.ru'
+  const DUMMY_URL = 'http://test345245657.ru';
   const footnotesVisited = new Set();
 
   const links = element.querySelectorAll('a');
@@ -141,7 +141,8 @@ function prepareLinks(element, pageFilename) {
       const footnoteNumber = link.textContent;
       const preparedFootnoteNumber = footnoteNumber.replace('[', '').replace(']', '');
 
-      const footnoteMark = linkHash.endsWith('anc') ? ': ' : '';
+      const footnoteMark = linkHash.endsWith('anc') || linkHash.startsWith('#_ftnref') 
+        ? ': ' : '';
       
       const footnoteLink = `[^${preparedFootnoteNumber}]` + footnoteMark;
   
@@ -171,5 +172,5 @@ function isFootnoteLink(url, pageFilename) {
   return (url.hash.endsWith('anc')
     || url.hash.endsWith('sym')
     || url.hash.startsWith('#_ftn')
-  )
+  );
 }
