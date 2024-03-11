@@ -115,7 +115,15 @@ export function readFiles(basePath, inputFilenames, showBadFiles) {
 
 function prepareContent(text) {
   let preparedText = text;
+  preparedText = preparedText.replaceAll('\n +\n', '\n\n');
+
+  // Табы преобразуются в пробелы
   preparedText = preparedText.replaceAll('\t', ' ');
+  
+  // Неразрывные пробелы заменяются на пробелы (https://symbl.cc/en/00A0/)
+  preparedText = preparedText.replaceAll('\u00A0', ' ');
+
+  // Два и более пробела заменяются на один
   preparedText = preparedText.replaceAll(/  +/gi, ' ');
   return preparedText;
 }
