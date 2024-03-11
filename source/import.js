@@ -63,7 +63,8 @@ export function htmlToArticle(html, filename) {
     }
   }
         
-  const text = articleNode.text.trim().replaceAll('\n', '\n\n');
+  const articleText = articleNode.text.trim().replaceAll('\n', '\n\n');
+  const content = prepareContent(articleText);
 
   const newFilename = path.parse(filename).name + ".md";
 
@@ -72,7 +73,7 @@ export function htmlToArticle(html, filename) {
     title,
     date,
     author,
-    content: text,
+    content,
     tags
   };
 }
@@ -110,4 +111,10 @@ export function readFiles(basePath, inputFilenames, showBadFiles) {
       console.log(`Finished parsing ${count} files`);
     }
   });
+}
+
+function prepareContent(text) {
+  let preparedText = text;
+  preparedText = preparedText.replaceAll(/  +/gi, ' ');
+  return preparedText;
 }
