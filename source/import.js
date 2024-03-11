@@ -133,7 +133,7 @@ function prepareContent(text) {
     }
     preparedText = newText;
   } 
-//  preparedText = preparedText.replaceAll('\n\n(\n)+', '\n\n');
+  preparedText = preparedText.replaceAll(/\n\n(\n)+/gi, '\n\n');
 
   return preparedText;
 }
