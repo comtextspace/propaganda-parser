@@ -30,7 +30,7 @@ test('htmlToArticle — 10080.html', () => {
   expect(article.content).toBe(destContent);
 });
 
-test('htmlToArticle — 10080.html', () => {
+test('htmlToArticle — 8860.html', () => {
   const source = fs.readFileSync('./tests/fixtures/import/8860.html', "utf8");
   const destContent = fs.readFileSync('./tests/fixtures/import/8860.md', "utf8");
 

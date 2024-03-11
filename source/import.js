@@ -115,8 +115,7 @@ export function readFiles(basePath, inputFilenames, showBadFiles) {
 
 function prepareContent(text) {
   let preparedText = text;
-  preparedText = preparedText.replaceAll('\n +\n', '\n\n');
-
+  
   // Табы преобразуются в пробелы
   preparedText = preparedText.replaceAll('\t', ' ');
   
@@ -125,5 +124,16 @@ function prepareContent(text) {
 
   // Два и более пробела заменяются на один
   preparedText = preparedText.replaceAll(/  +/gi, ' ');
+
+  // Удаление строк состоящих из одних пробелов и лишних переводов строк
+  while (true) {
+    const newText = preparedText.replaceAll('\n \n', '\n\n');
+    if (newText == preparedText) {
+      break;
+    }
+    preparedText = newText;
+  } 
+//  preparedText = preparedText.replaceAll('\n\n(\n)+', '\n\n');
+
   return preparedText;
 }
