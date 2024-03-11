@@ -115,6 +115,7 @@ export function readFiles(basePath, inputFilenames, showBadFiles) {
 
 function prepareContent(text) {
   let preparedText = text;
+  preparedText = preparedText.replaceAll('\t', ' ');
   preparedText = preparedText.replaceAll(/  +/gi, ' ');
   return preparedText;
 }
