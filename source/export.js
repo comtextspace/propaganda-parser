@@ -49,7 +49,7 @@ function makeArticle({title, date, author, content}) {
     + '\n\n'
     + makeHeader(title, date, author)
     + '\n\n'
-    + content;
+    + escapeContentForVuepress(content);
 
   return article;
 }
@@ -71,5 +71,9 @@ function makeHeader(title, date, author) {
 }
 
 function escapeYamlFiled(text) {
-  return text.replaceAll('"', '\\"')
+  return text.replaceAll('"', '\\"');
+}
+
+function escapeContentForVuepress(text) {
+  return text.replaceAll('{', '\\{').replaceAll('}', '\\}');
 }
