@@ -109,8 +109,12 @@ function prepareContent(text) {
     preparedText = newText;
   } 
   preparedText = preparedText.replaceAll(/\n\n(\n)+/gi, '\n\n');
-
+  
+  // Удаление лидирующих пробелов в строке
   preparedText = preparedText.replaceAll(/\n +([\wа-яА-Я\[])/gi, '\n$1');
+
+  // Удаление пробелов в конце строки
+  preparedText = preparedText.replaceAll(/([\wа-яА-Я\)\.\?\!]) +\n/gi, '$1\n');
 
   return preparedText;
 }
