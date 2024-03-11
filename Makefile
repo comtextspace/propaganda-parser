@@ -15,3 +15,6 @@ lint:
 
 lintfix:
 	yarn lint:fix
+
+clear:
+	rm ./site_out/*
