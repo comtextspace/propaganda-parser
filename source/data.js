@@ -18,23 +18,34 @@ export function createSchema() {
 
 }
 export function addArticle({filename, title, date, author, content, tags}) {
-  const stmt = db.prepare(DB_INSERT_ARTICLE);
+  const articleStmt = db.prepare(DB_INSERT_ARTICLE);
 
   const preparedFilename = filename.length == 0 ? null : filename;
   const preparedTitle = title.length == 0 ? null : title;
   const preparedDate = date.length == 0 ? null : date;
   const preparedAuthor = author.length == 0 ? null : author;
   const preparedContent = content.length == 0 ? null : content;
-  const preparedTags = tags.length == 0 ? null : tags;
 
-  stmt.run({
+  articleStmt.run({
     filename: preparedFilename,
     title: preparedTitle,
     date: preparedDate,
     author: preparedAuthor,
-    content: preparedContent,
-    tags: preparedTags
-  });    
+    content: preparedContent
+  });
+
+
+  const tagStmt = db.prepare(DB_INSERT_TAG);
+
+  for (const tag of tags) {
+    const preparedTag = tag.length == 0 ? null : tag;
+
+    tagStmt.run({
+      filename: preparedFilename,
+      tag: preparedTag
+    });
+  }
+
 }
 
 export function getArticles() {
@@ -58,8 +69,7 @@ create table article (
     title text not null,
     date test not null,
     author text,
-    content text not null,
-    tags text
+    content text not null
     );
 
 drop table if exists ignore_files;
@@ -68,11 +78,24 @@ create table ignore_files (
   id integer primary key autoincrement not null,
   filename text not null
 );
+
+drop table if exists tag;
+
+create table tag (
+  filename text not null,
+  tag text not null
+);
+
 `;
 
 const DB_INSERT_ARTICLE = `
-insert into article (filename, title, date, author, content, tags) 
-values(:filename, :title, :date, :author, :content, :tags);
+insert into article (filename, title, date, author, content) 
+values(:filename, :title, :date, :author, :content);
+`;
+
+const DB_INSERT_TAG = `
+insert into tag (filename, tag) 
+values(:filename, :tag);
 `;
 
 const DB_SELECT_ARTICLE = `
@@ -81,8 +104,7 @@ select
   a.title, 
   a.date, 
   a.author, 
-  a.content, 
-  a.tags
+  a.content
 from
   article a left join ignore_files if on
     a.filename = if.filename
@@ -175,4 +197,4 @@ values
 ('10412.md'),
 ('10421.md'),
 ('10571.md');
-`
+`;

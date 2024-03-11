@@ -27,10 +27,10 @@ export function htmlToArticle(html, filename) {
   const tagsNode = articleNode.querySelector('.tags');
 
   const title = prepareTitle(titleNode.text.trim());
-  const tags = tagsNode.text.trim();
+  const tags = prepareTags(tagsNode.text.trim());
 
   const date = authorNode.querySelector('.date').text.trim();
-  const author = authorNode.text.replace('Версия для печати', '').replace(date, '').trim();
+  const author = prepareAuthor(authorNode.text.replace('Версия для печати', '').replace(date, '').trim());
         
   titleNode.remove();
   authorNode.remove();
@@ -88,6 +88,18 @@ export function readFiles(basePath, inputFilenames, showBadFiles) {
       console.log(`Finished parsing ${count} files`);
     }
   });
+}
+
+function prepareAuthor(text) {
+  return text;
+}
+
+function prepareTags(text) {
+  if (text == '') {
+    return [];
+  }
+  
+  return text.split(' ').sort();
 }
 
 function prepareTitle(text) {

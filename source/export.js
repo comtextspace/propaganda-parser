@@ -59,7 +59,7 @@ function makeYAML(title, date, author) {
 `---
 title: "${escapeYamlFiled(title)}"
 date: "${escapeYamlFiled(date)}"
-author: "${escapeYamlFiled(author)}"
+author: "${escapeYamlFiled(prepareAuthor(author))}"
 ---`;
 }
 
@@ -68,6 +68,14 @@ function makeHeader(title, date, author) {
 `# ${title}
 
 **${date}** ${author}`;
+}
+
+function prepareAuthor(text) {
+  if (text.length == 0) {
+    return 'Автор отсутствует';
+  }
+
+  return text;
 }
 
 function escapeYamlFiled(text) {
