@@ -129,7 +129,12 @@ function prepareStrong(element) {
       continue;
     }
 
-    strongNode.textContent = `**${strongNode.textContent}**`;
+    const text = strongNode.textContent;
+
+    const leftSpace = text.startsWith(' ') ? ' ' : '';
+    const rightSpace = text.endsWith(' ') ? ' ' : '';
+
+    strongNode.textContent = `${leftSpace}**${text.trim()}**${rightSpace}`;
   }
 }
 
@@ -141,7 +146,12 @@ function prepareEm(element) {
       continue;
     }
 
-    emNode.textContent = `*${emNode.textContent}*`;
+    const text = emNode.textContent;
+
+    const leftSpace = text.startsWith(' ') ? ' ' : '';
+    const rightSpace = text.endsWith(' ') ? ' ' : '';
+
+    emNode.textContent = `${leftSpace}*${text.trim()}*${rightSpace}`;
   }
 }
 
