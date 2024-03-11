@@ -37,6 +37,8 @@ export function htmlToArticle(html, filename) {
   tagsNode.remove();
 
   prepareLinks(articleNode, filename);
+  prepareStrong(articleNode);
+  prepareEm(articleNode);
         
   const articleText = articleNode.text.trim().replaceAll('\n', '\n\n');
   const content = prepareContent(articleText);
@@ -117,6 +119,30 @@ function prepareContent(text) {
   preparedText = preparedText.replaceAll(/([\wа-яА-Я\)\.\?\!]) +\n/gi, '$1\n');
 
   return preparedText;
+}
+
+function prepareStrong(element) {
+  const strongNodes = element.querySelectorAll('strong');
+
+  for (const strongNode of strongNodes) {
+    if (strongNode.textContent.trim() == '') {
+      continue;
+    }
+
+    strongNode.textContent = `**${strongNode.textContent}**`;
+  }
+}
+
+function prepareEm(element) {
+  const emNodes = element.querySelectorAll('em');
+
+  for (const emNode of emNodes) {
+    if (emNode.textContent.trim() == '') {
+      continue;
+    }
+
+    emNode.textContent = `*${emNode.textContent}*`;
+  }
 }
 
 function prepareLinks(element, pageFilename) {
