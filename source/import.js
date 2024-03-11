@@ -26,10 +26,10 @@ export function htmlToArticle(html, filename) {
   const authorNode = articleNode.querySelector('.author');
   const tagsNode = articleNode.querySelector('.tags');
 
-  const title = titleNode.text.trim();
+  const title = prepareTitle(titleNode.text.trim());
   const tags = tagsNode.text.trim();
 
-  const date = authorNode.querySelector('.date').text;
+  const date = authorNode.querySelector('.date').text.trim();
   const author = authorNode.text.replace('Версия для печати', '').replace(date, '').trim();
         
   titleNode.remove();
@@ -67,7 +67,7 @@ export function readFiles(basePath, inputFilenames, showBadFiles) {
       try {
         const article = htmlToArticle(fileContent, filename);
     
-        if (article) {
+        if (article && article.content) {
           addArticle(article);
         } else {
           if (showBadFiles) {
@@ -88,6 +88,14 @@ export function readFiles(basePath, inputFilenames, showBadFiles) {
       console.log(`Finished parsing ${count} files`);
     }
   });
+}
+
+function prepareTitle(text) {
+  if (text.length == 0) {
+    return 'Заголовок отсутствует';
+  }
+
+  return text;
 }
 
 function prepareContent(text) {

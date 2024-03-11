@@ -19,13 +19,21 @@ export function createSchema() {
 }
 export function addArticle({filename, title, date, author, content, tags}) {
   const stmt = db.prepare(DB_INSERT_ARTICLE);
+
+  const preparedFilename = filename.length == 0 ? null : filename;
+  const preparedTitle = title.length == 0 ? null : title;
+  const preparedDate = date.length == 0 ? null : date;
+  const preparedAuthor = author.length == 0 ? null : author;
+  const preparedContent = content.length == 0 ? null : content;
+  const preparedTags = tags.length == 0 ? null : tags;
+
   stmt.run({
-    filename: filename,
-    title: title,
-    date: date,
-    author: author,
-    content: content,
-    tags: tags
+    filename: preparedFilename,
+    title: preparedTitle,
+    date: preparedDate,
+    author: preparedAuthor,
+    content: preparedContent,
+    tags: preparedTags
   });    
 }
 
@@ -49,9 +57,9 @@ create table article (
     filename text not null,
     title text not null,
     date test not null,
-    author text not null,
+    author text,
     content text not null,
-    tags text not null
+    tags text
     );
 
 drop table if exists ignore_files;
