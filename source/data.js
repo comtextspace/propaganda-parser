@@ -1,8 +1,19 @@
+import fs from 'fs';
+
 import Sqlite3 from 'better-sqlite3';
+
+/* Project modules */
+
+/* Constants */
 
 const DB_FILENAME = './db.sqlite3';
 
-let db;
+const AUTHOR_REPLACE_SQL_FILENAME = './data/author_replace.sql';
+
+/* Export */
+
+let db = null;
+let authorReplace = null
 
 export function openDb() {
   db = new Sqlite3(DB_FILENAME);
@@ -16,8 +27,27 @@ export function createSchema() {
   db.exec(DB_SCHEMA);
   db.exec(DB_FILL_IGNORE_LIST);
 
+  const sql = fs.readFileSync(AUTHOR_REPLACE_SQL_FILENAME, 'utf8');
+  db.exec(sql);
 }
-export function addArticle({filename, title, date, authorRaw, content, tags}) {
+
+export function getAuthorReplace() {
+  if (authorReplace) {
+    return authorReplace;
+  }
+
+  authorReplace = new Map();
+  
+  const stmt = db.prepare(DB_SELECT_AUTHOR_REPLACE);
+  
+  for (const repl of stmt.all()) {
+    authorReplace.set(repl.author_raw, repl.author);
+  }
+
+  return authorReplace;
+}
+
+export function addArticle({filename, title, date, authorRaw, content, tags, authors}) {
   const articleStmt = db.prepare(DB_INSERT_ARTICLE);
 
   const preparedFilename = filename.length == 0 ? null : filename;
@@ -42,6 +72,21 @@ export function addArticle({filename, title, date, authorRaw, content, tags}) {
     tagStmt.run({
       filename: preparedFilename,
       tag: preparedTag
+    });
+  }
+
+  const authorStmt = db.prepare(DB_INSERT_AUTHOR);
+
+  for (const author of authors) {
+    const preparedAuthor = author.length == 0 ? null : author;
+
+    if (!author) {
+      continue;
+    }
+
+    authorStmt.run({
+      filename: preparedFilename,
+      author: preparedAuthor
     });
   }
 
@@ -89,6 +134,19 @@ create table tag (
   tag text not null
 );
 
+drop table if exists author_replace;
+
+create table author_replace (
+  author_raw text primary key not null,
+  author text not null
+);
+
+drop table if exists author;
+
+create table author (
+  filename text not null,
+  author text not null
+);
 `;
 
 const DB_INSERT_ARTICLE = `
@@ -99,6 +157,11 @@ values(:filename, :title, :date, :author_raw, :content);
 const DB_INSERT_TAG = `
 insert into tag (filename, tag) 
 values(:filename, :tag);
+`;
+
+const DB_INSERT_AUTHOR = `
+insert into author (filename, author) 
+values(:filename, :author);
 `;
 
 const DB_SELECT_ARTICLE = `
@@ -150,6 +213,14 @@ where
 order BY 
   t.tag;
 `;
+
+const DB_SELECT_AUTHOR_REPLACE = `
+select 
+  ar.author_raw,
+  ar.author
+from 
+  author_replace ar;
+`
 
 const DB_FILL_IGNORE_LIST = `
 insert into

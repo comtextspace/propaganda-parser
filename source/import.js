@@ -5,13 +5,13 @@ import htmlParser from 'node-html-parser';
 
 /* Project modules */
 
-import {addArticle} from './data.js';
+import {addArticle, getAuthorReplace} from './data.js';
 
 /* Constants */
 
 /* Export */
 
-export function htmlToArticle(html, filename) {
+export function htmlToArticle(html, filename, authorReplace) {
   const root = htmlParser.parse(html);
 
   const titles = root.querySelectorAll('.zagolovok');
@@ -32,7 +32,7 @@ export function htmlToArticle(html, filename) {
   const date = authorNode.querySelector('.date').text.trim();
 
   const authorRaw = authorNode.text.replace('Версия для печати', '').replace(date, '').trim();
-  //const author = prepareAuthor(authorRaw);
+  const authors = prepareAuthors(authorRaw, authorReplace);
         
   titleNode.remove();
   authorNode.remove();
@@ -52,6 +52,7 @@ export function htmlToArticle(html, filename) {
     title,
     date,
     authorRaw,
+    authors,
     content,
     tags
   };
@@ -67,7 +68,7 @@ export function readFiles(basePath, inputFilenames, showBadFiles) {
       const fileContent = fs.readFileSync(path.join(basePath, filename));
             
       try {
-        const article = htmlToArticle(fileContent, filename);
+        const article = htmlToArticle(fileContent, filename, getAuthorReplace());
     
         if (article && article.content) {
           addArticle(article);
@@ -92,8 +93,16 @@ export function readFiles(basePath, inputFilenames, showBadFiles) {
   });
 }
 
-function prepareAuthor(text) {
-  return text;
+function prepareAuthors(text, authorReplace) {
+  if (!authorReplace) {
+    return
+  }
+
+  if (authorReplace.has(text)) {
+    return authorReplace.get(text).split(', ');
+  } else {
+    return text.split(', ');
+  }
 }
 
 function prepareTags(text) {
