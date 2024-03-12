@@ -3,19 +3,24 @@ import path from 'path';
 
 /* Project modules */
 
-import {getArticles, getArticleIndex, getTagIndex} from './data.js';
+import {getArticles, getArticleIndex, getTagIndex, getAuthorIndex} from './data.js';
 
 /* Constants */
 
 const INDEX_FILENAME = 'index.md';
-const TAG_FILENAME = 'tag.md';
+const TAG_FILENAME = 'tags.md';
+const AUTHOR_FILENAME = 'authors.md';
 
 const INDEX_HEADER = `# Архив сайта журнала Пропаганда (propaganda-journal.net)
 
 * [Об архиве](/static/about.md)
+* [Список авторов](${AUTHOR_FILENAME})
 * [Список тегов](${TAG_FILENAME})`;
 
 const TAG_HEADER = `# Теги\n\nНекоторые статьи содержат несколько тегов, поэтому они дублируются на страницах разных тегов\n\n`;
+
+const AUTHOR_HEADER = `# Авторы\n\n[[toc]]`;
+
 /* Export */
 
 export function makeFiles(outPath) {
@@ -38,7 +43,7 @@ export function makeIndex(outPath) {
   articles.forEach(({shortdate, filename, title, date}) => {
     if (lastShortdate != shortdate) {
       lastShortdate = shortdate;
-      indexPageContent += `\n\n# ${shortdate}\n`;
+      indexPageContent += `\n\n## ${shortdate}\n`;
     }
 
     indexPageContent += `
@@ -47,6 +52,24 @@ export function makeIndex(outPath) {
 
   const fullIndexFilename = path.join(outPath, INDEX_FILENAME);
   fs.writeFileSync(fullIndexFilename, indexPageContent);
+}
+
+export function makeAuthorIndex(outPath) {
+  let indexContent = AUTHOR_HEADER;
+  let lastAuthor = '';
+
+  const authors = getAuthorIndex();
+
+  authors.forEach(({author, title, filename, date, cnt}) => {
+    if (lastAuthor != author) {
+      lastAuthor = author;
+      indexContent += `\n\n## ${author} (${cnt})\n`;
+    }
+
+    indexContent += `\n* [${title}](${filename}) (${date})`;});
+
+  const fullIndexFilename = path.join(outPath, AUTHOR_FILENAME);
+  fs.writeFileSync(fullIndexFilename, indexContent);
 }
 
 export function makeTagIndex(outPath) {

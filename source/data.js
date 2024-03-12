@@ -107,6 +107,11 @@ export function getTagIndex() {
   return stmt.all();
 }
 
+export function getAuthorIndex() {
+  const stmt = db.prepare(DB_SELECT_AUTHOR_INDEX);
+  return stmt.all();
+}
+
 const DB_SCHEMA =
 `
 drop table if exists article;
@@ -193,6 +198,24 @@ where
 order by 
   a.date desc, 
   a.title;
+`;
+
+const DB_SELECT_AUTHOR_INDEX = `
+select
+  au.author,
+  a.title,
+  a.filename,
+  a.date,
+  count(*) over (partition by au.author) as cnt 
+from 
+  article a join author au
+    on a.filename = au.filename
+  left join ignore_files if on
+    a.filename = if.filename
+where
+  if.filename is null
+order BY 
+  au.author;
 `;
 
 const DB_SELECT_TAG_INDEX = `
