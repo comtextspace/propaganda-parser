@@ -30,7 +30,9 @@ export function htmlToArticle(html, filename) {
   const tags = prepareTags(tagsNode.text.trim());
 
   const date = authorNode.querySelector('.date').text.trim();
-  const author = prepareAuthor(authorNode.text.replace('Версия для печати', '').replace(date, '').trim());
+
+  const authorRaw = authorNode.text.replace('Версия для печати', '').replace(date, '').trim();
+  //const author = prepareAuthor(authorRaw);
         
   titleNode.remove();
   authorNode.remove();
@@ -49,7 +51,7 @@ export function htmlToArticle(html, filename) {
     filename: newFilename,
     title,
     date,
-    author,
+    authorRaw,
     content,
     tags
   };

@@ -84,33 +84,33 @@ function tagToFilename(tag) {
   return tag.replace(/\+/gi, '_').replace(/\s/gi, '_').toLowerCase();
 }
 
-function makeArticle({title, date, author, content}) {
-  const article = makeYAML(title, date, author) 
+function makeArticle({title, date, author_raw, content}) {
+  const article = makeYAML(title, date, author_raw) 
     + '\n\n'
-    + makeHeader(title, date, author)
+    + makeHeader(title, date, author_raw)
     + '\n\n'
     + escapeContentForVuepress(content);
 
   return article;
 }
 
-function makeYAML(title, date, author) {
+function makeYAML(title, date, authorRaw) {
   return '' +
 `---
 title: "${escapeYamlFiled(title)}"
 date: "${escapeYamlFiled(date)}"
-author: "${escapeYamlFiled(prepareAuthor(author))}"
+author: "${escapeYamlFiled(prepareAuthorRaw(authorRaw))}"
 ---`;
 }
 
-function makeHeader(title, date, author) {
+function makeHeader(title, date, authorRaw) {
   return '' +
 `# ${title}
 
-**${date}** ${author}`;
+**${date}** ${authorRaw}`;
 }
 
-function prepareAuthor(text) {
+function prepareAuthorRaw(text) {
   if (text == null) {
     return 'Автор отсутствует';
   }

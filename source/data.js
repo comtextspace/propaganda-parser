@@ -17,20 +17,20 @@ export function createSchema() {
   db.exec(DB_FILL_IGNORE_LIST);
 
 }
-export function addArticle({filename, title, date, author, content, tags}) {
+export function addArticle({filename, title, date, authorRaw, content, tags}) {
   const articleStmt = db.prepare(DB_INSERT_ARTICLE);
 
   const preparedFilename = filename.length == 0 ? null : filename;
   const preparedTitle = title.length == 0 ? null : title;
   const preparedDate = date.length == 0 ? null : date;
-  const preparedAuthor = author.length == 0 ? null : author;
+  const preparedAuthorRaw = authorRaw.length == 0 ? null : authorRaw;
   const preparedContent = content.length == 0 ? null : content;
 
   articleStmt.run({
     filename: preparedFilename,
     title: preparedTitle,
     date: preparedDate,
-    author: preparedAuthor,
+    author_raw: preparedAuthorRaw,
     content: preparedContent
   });
 
@@ -71,7 +71,7 @@ create table article (
     filename text not null,
     title text not null,
     date test not null,
-    author text,
+    author_raw text,
     content text not null
     );
 
@@ -92,8 +92,8 @@ create table tag (
 `;
 
 const DB_INSERT_ARTICLE = `
-insert into article (filename, title, date, author, content) 
-values(:filename, :title, :date, :author, :content);
+insert into article (filename, title, date, author_raw, content) 
+values(:filename, :title, :date, :author_raw, :content);
 `;
 
 const DB_INSERT_TAG = `
@@ -106,7 +106,7 @@ select
   a.filename,
   a.title, 
   a.date, 
-  a.author, 
+  a.author_raw, 
   a.content
 from
   article a left join ignore_files if on
@@ -121,7 +121,7 @@ select
   a.filename, 
   a.date, 
   a.title, 
-  a.author
+  a.author_raw
 from 
   article a left join ignore_files if on
     a.filename = if.filename
@@ -137,7 +137,7 @@ select
   coalesce(t.tag, 'Без тега') tag,
   a.title,
   a.filename,
-  a.author,
+  a.author_raw,
   a.date,
   count(*) over (partition by t.tag) as cnt 
 from 
