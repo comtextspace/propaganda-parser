@@ -12,9 +12,10 @@ const TAG_FILENAME = 'tag.md';
 
 const INDEX_HEADER = `# Архив сайта журнала Пропаганда (propaganda-journal.net)
 
+* [Об архиве](/static/about.md)
 * [Список тегов](${TAG_FILENAME})`;
 
-const TAG_HEADER = `# Теги\n\n`;
+const TAG_HEADER = `# Теги\n\nНекоторые статьи содержат несколько тегов, поэтому они дублируются на страницах разных тегов\n\n`;
 /* Export */
 
 export function makeFiles(outPath) {
@@ -30,7 +31,11 @@ export function makeIndex(outPath) {
   let indexPageContent = INDEX_HEADER;
   let lastShortdate = '';
 
-  getArticleIndex().forEach(({shortdate, filename, title, date}) => {
+  const articles = getArticleIndex();
+
+  indexPageContent += `\n\nВсего страниц: ${articles.length}`;
+
+  articles.forEach(({shortdate, filename, title, date}) => {
     if (lastShortdate != shortdate) {
       lastShortdate = shortdate;
       indexPageContent += `\n\n# ${shortdate}\n`;
