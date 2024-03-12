@@ -46,20 +46,24 @@ export function makeIndex(outPath) {
 
 export function makeTagIndex(outPath) {
   const tagLinks = new Map();
+  const tagCount = new Map();
 
-  getTagIndex().forEach(({tag, title, filename, date}) => {
+  getTagIndex().forEach(({tag, title, filename, date, cnt}) => {
     const tagFilename = tagToFilename(tag);
     
     if (!tagLinks.has(tagFilename)) {
       tagLinks.set(tagFilename, []);
+      tagCount.set(tagFilename, cnt);
     }
 
     const link = `* [${title}](${filename}) (${date})`;
     tagLinks.get(tagFilename).push(link);
   });
 
-  const tagPageBody = [... tagLinks.keys()].map(tag => `* [${tag}](${tag}.md)`);;
-  const tagPageContent = TAG_HEADER + tagPageBody.join('\n');
+  const tagPageBody = [... tagLinks.keys()]
+    .map(tag => `* [${tag}](${tag}.md) (${tagCount.get(tag)})`);;
+  
+    const tagPageContent = TAG_HEADER + tagPageBody.join('\n');
 
   const fullTagFilename = path.join(outPath, TAG_FILENAME);
   fs.writeFileSync(fullTagFilename, tagPageContent);

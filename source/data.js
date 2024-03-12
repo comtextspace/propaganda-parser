@@ -138,7 +138,8 @@ select
   a.title,
   a.filename,
   a.author,
-  a.date
+  a.date,
+  count(*) over (partition by t.tag) as cnt 
 from 
   article a left join tag t
     on a.filename = t.filename
