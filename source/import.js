@@ -227,9 +227,18 @@ function prepareLinks(element, pageFilename) {
         continue;
       }
 
-      const preparedUrl = url.toString().replace(DUMMY_URL, '');
+      const originUrl = url.toString();
 
-      link.textContent = `[${link.textContent}](${preparedUrl})`;
+      if (originUrl.startsWith(DUMMY_URL)) {
+        const preparedUrl = originUrl
+        .replace(DUMMY_URL, '')
+        .replaceAll('.html', '.md');
+
+        link.textContent = `[${link.textContent}](${preparedUrl})`;
+        continue;
+      }
+
+      link.textContent = `[${link.textContent}](${originUrl})`;
     }
 
   }
