@@ -135,12 +135,12 @@ function makeHeader(title, date, authorRaw) {
   return '' +
 `# ${title}
 
-**${date}** ${authorRaw}`;
+**${date}** ${prepareAuthorRaw(authorRaw)}`;
 }
 
 function prepareAuthorRaw(text) {
   if (text == null) {
-    return 'Автор отсутствует';
+    return 'Автор неизвестен';
   }
 
   return text;
