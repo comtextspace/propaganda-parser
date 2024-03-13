@@ -113,7 +113,7 @@ export function moveImages(sourcePath, destPath) {
     const sourceName = path.join(sourcePath, path.parse(src).base);
     const destName = path.join(destPath, src);
     
-    fs.copyFileSync(sourceName, destName);
+    fs.copyFileSync(sourceName, destName.toLowerCase());
   }
 }
 

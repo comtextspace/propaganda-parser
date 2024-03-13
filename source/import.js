@@ -263,7 +263,8 @@ function prepareLi(element) {
   const liElements = element.querySelectorAll('li');
 
   for (const li of liElements) {
-    li.innerHTML = '* ' + li.textContent.replace('\n', '');
+    const mark = li.parentNode.rawTagName == 'ol' ? '1. ' : '* ';
+    li.innerHTML = mark + li.textContent.replace('\n', '');
   }
 }
 
@@ -278,12 +279,15 @@ function prepareImg(element) {
 
     const preparedAlt = alt?.replaceAll('[', '').replaceAll(']', '');
 
-    img.innerHTML = `![${preparedAlt}](${src})\n\n`;
-
-    if (isLocalImage(src)) {
-      const preparedSrc = prepareSrc(src);
-      localImages.push(preparedSrc);
+    if (!isLocalImage(src)) {
+      img.innerHTML = `![${preparedAlt}](${src})\n\n`;
+      continue;
     }
+  
+    const preparedSrc = prepareSrc(src);
+    localImages.push(preparedSrc);
+
+    img.innerHTML = `![${preparedAlt}](${preparedSrc.toLowerCase()})\n\n`;
   }
 
   return localImages;
@@ -297,9 +301,9 @@ function isLocalImage(src) {
   const DUMMY_URL = 'http://test345245657.ru';
             
   try {
-      const url = new URL(src, DUMMY_URL);
-      return url.toString().startsWith(DUMMY_URL);
+    const url = new URL(src, DUMMY_URL);
+    return url.toString().startsWith(DUMMY_URL);
   } catch (err) {
-      return false;
+    return false;
   }
 }
