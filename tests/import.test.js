@@ -43,3 +43,17 @@ test('htmlToArticle — 8860.html', () => {
   expect(article.filename).toBe('8860.md');
   expect(article.content).toBe(destContent);
 });
+
+test('htmlToArticle — 10029.html', () => {
+  const source = fs.readFileSync('./tests/fixtures/import/10029.html', "utf8");
+  const destContent = fs.readFileSync('./tests/fixtures/import/10029.md', "utf8");
+
+  const article = htmlToArticle(source, '10029.html');
+
+  expect(article.title).toBe('О значении театра в преобразовании истории');
+  expect(article.date).toBe('2017-04-01');
+  expect(article.authorRaw).toBe('Ярослав Вареник');
+  expect(article.tags).toEqual(['культура']);
+  expect(article.filename).toBe('10029.md');
+  expect(article.content).toBe(destContent);
+});
