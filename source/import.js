@@ -43,6 +43,7 @@ export function htmlToArticle(html, filename, authorReplace) {
   prepareStrong(articleNode);
   prepareEm(articleNode);
   prepareLi(articleNode);
+  prepareImg(articleNode);
         
   const articleText = articleNode.text.trim().replaceAll('\n', '\n\n');
   const content = prepareContent(articleText);
@@ -261,5 +262,16 @@ function prepareLi(element) {
 
   for (const li of liElements) {
     li.innerHTML = '* ' + li.textContent.replace('\n', '');
+  }
+}
+
+function prepareImg(element) {
+  const imgElements = element.querySelectorAll('img');
+
+  for (const img of imgElements) {
+    const src = img.attributes['src']?.trim();
+    const alt = img.attributes['alt']?.trim();
+
+    img.innerHTML = `![${alt}](${src})\n\n`;
   }
 }
