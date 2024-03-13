@@ -13,7 +13,7 @@ const AUTHOR_REPLACE_SQL_FILENAME = './data/author_replace.sql';
 /* Export */
 
 let db = null;
-let authorReplace = null
+let authorReplace = null;
 
 export function openDb() {
   db = new Sqlite3(DB_FILENAME);
@@ -60,7 +60,7 @@ export function addArticle({filename, title, date, authorRaw, content, tags, aut
     filename: preparedFilename,
     title: preparedTitle,
     date: preparedDate,
-    author_raw: preparedAuthorRaw,
+    "author_raw": preparedAuthorRaw,
     content: preparedContent
   });
 
@@ -174,7 +174,7 @@ select
   a.filename,
   a.title, 
   a.date, 
-  a.author_raw, 
+  a.author_raw as authorRaw, 
   a.content
 from
   article a left join ignore_files if on
@@ -188,8 +188,7 @@ select
   strftime('%Y-%m', a.date) as shortdate, 
   a.filename, 
   a.date, 
-  a.title, 
-  a.author_raw
+  a.title
 from 
   article a left join ignore_files if on
     a.filename = if.filename
@@ -224,7 +223,6 @@ select
   coalesce(t.tag, 'Без тега') tag,
   a.title,
   a.filename,
-  a.author_raw,
   a.date,
   count(*) over (partition by t.tag) as cnt 
 from 
@@ -244,7 +242,7 @@ select
   ar.author
 from 
   author_replace ar;
-`
+`;
 
 const DB_FILL_IGNORE_LIST = `
 insert into

@@ -95,7 +95,7 @@ export function readFiles(basePath, inputFilenames, showBadFiles) {
 
 function prepareAuthors(text, authorReplace) {
   if (!authorReplace) {
-    return
+    return;
   }
 
   if (authorReplace.has(text)) {

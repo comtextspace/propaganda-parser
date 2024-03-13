@@ -89,16 +89,16 @@ export function makeTagIndex(outPath) {
   });
 
   const tagPageBody = [... tagLinks.keys()]
-    .map(tag => `* [${tag}](${tag}.md) (${tagCount.get(tag)})`);;
+    .map(tag => `* [${tag}](${tag}.md) (${tagCount.get(tag)})`);
   
-    const tagPageContent = TAG_HEADER + tagPageBody.join('\n');
+  const tagPageContent = TAG_HEADER + tagPageBody.join('\n');
 
   const fullTagFilename = path.join(outPath, TAG_FILENAME);
   fs.writeFileSync(fullTagFilename, tagPageContent);
 
   for (const tagFilename of tagLinks.keys()) {
 
-    const tagBody = tagLinks.get(tagFilename).join('\n')
+    const tagBody = tagLinks.get(tagFilename).join('\n');
     const tagPageContent = `# ${tagFilename}\n\n` + tagBody;
   
     const fullFilename = path.join(outPath, tagFilename + '.md');
@@ -112,10 +112,10 @@ function tagToFilename(tag) {
   return tag.replace(/\+/gi, '_').replace(/\s/gi, '_').toLowerCase();
 }
 
-function makeArticle({title, date, author_raw, content}) {
-  const article = makeYAML(title, date, author_raw) 
+function makeArticle({title, date, authorRaw, content}) {
+  const article = makeYAML(title, date, authorRaw) 
     + '\n\n'
-    + makeHeader(title, date, author_raw)
+    + makeHeader(title, date, authorRaw)
     + '\n\n'
     + escapeContentForVuepress(content);
 
