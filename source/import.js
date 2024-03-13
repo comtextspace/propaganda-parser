@@ -43,7 +43,8 @@ export function htmlToArticle(html, filename, authorReplace) {
   prepareStrong(articleNode);
   prepareEm(articleNode);
   prepareLi(articleNode);
-  prepareImg(articleNode);
+  
+  const images = prepareImg(articleNode);
         
   const articleText = articleNode.text.trim().replaceAll('\n', '\n\n');
   const content = prepareContent(articleText);
@@ -57,7 +58,8 @@ export function htmlToArticle(html, filename, authorReplace) {
     authorRaw,
     authors,
     content,
-    tags
+    tags,
+    images
   };
 }
 
@@ -266,6 +268,8 @@ function prepareLi(element) {
 }
 
 function prepareImg(element) {
+  const localImages = [];
+
   const imgElements = element.querySelectorAll('img');
 
   for (const img of imgElements) {
@@ -275,5 +279,22 @@ function prepareImg(element) {
     const preparedAlt = alt?.replaceAll('[', '').replaceAll(']', '');
 
     img.innerHTML = `![${preparedAlt}](${src})\n\n`;
+
+    if (isLocalImage(src)) {
+      localImages.push(src);
+    }
+  }
+
+  return localImages;
+}
+
+function isLocalImage(src) {
+  const DUMMY_URL = 'http://test345245657.ru';
+            
+  try {
+      const url = new URL(src, DUMMY_URL);
+      return url.toString().startsWith(DUMMY_URL);
+  } catch (err) {
+      return false;
   }
 }

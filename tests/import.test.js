@@ -13,6 +13,7 @@ test('htmlToArticle — 100.html', () => {
   expect(article.authorRaw).toBe('В. Дмитрук');
   expect(article.tags).toEqual(['события+комментарии']);
   expect(article.filename).toBe('100.md');
+  expect(article.images).toEqual([]);
   expect(article.content).toBe(destContent);
 });
 
@@ -27,6 +28,7 @@ test('htmlToArticle — 10080.html', () => {
   expect(article.authorRaw).toBe('Василий Пихорович');
   expect(article.tags).toEqual(['теория']);
   expect(article.filename).toBe('10080.md');
+  expect(article.images).toEqual([]);
   expect(article.content).toBe(destContent);
 });
 
@@ -41,6 +43,7 @@ test('htmlToArticle — 8860.html', () => {
   expect(article.authorRaw).toBe('Mikołaj Zagorski');
   expect(article.tags).toEqual(['история', 'культура', 'политика']);
   expect(article.filename).toBe('8860.md');
+  expect(article.images).toEqual([]);
   expect(article.content).toBe(destContent);
 });
 
@@ -55,6 +58,7 @@ test('htmlToArticle — 10029.html', () => {
   expect(article.authorRaw).toBe('Ярослав Вареник');
   expect(article.tags).toEqual(['культура']);
   expect(article.filename).toBe('10029.md');
+  expect(article.images).toEqual([]);
   expect(article.content).toBe(destContent);
 });
 
@@ -69,6 +73,7 @@ test('htmlToArticle — 10036.html', () => {
   expect(article.authorRaw).toBe('Павел Богдан');
   expect(article.tags).toEqual(['дискуссия', 'культура']);
   expect(article.filename).toBe('10036.md');
+  expect(article.images).toEqual([]);
   expect(article.content).toBe(destContent);
 });
 
@@ -83,5 +88,6 @@ test('htmlToArticle — 1298.html', () => {
   expect(article.authorRaw).toBe('К. Дымов');
   expect(article.tags).toEqual(['история', 'культура', 'общество']);
   expect(article.filename).toBe('1298.md');
+  expect(article.images).toEqual(['images/St090724.jpg']);
   expect(article.content).toBe(destContent);
 });

@@ -47,7 +47,16 @@ export function getAuthorReplace() {
   return authorReplace;
 }
 
-export function addArticle({filename, title, date, authorRaw, content, tags, authors}) {
+export function addArticle({
+  filename, 
+  title, 
+  date, 
+  authorRaw, 
+  content, 
+  tags, 
+  authors,
+  images
+}) {
   const articleStmt = db.prepare(DB_INSERT_ARTICLE);
 
   const preparedFilename = filename.length == 0 ? null : filename;
@@ -90,6 +99,20 @@ export function addArticle({filename, title, date, authorRaw, content, tags, aut
     });
   }
 
+  const imageStmt = db.prepare(DB_INSERT_IMAGE);
+
+  for (const image of images) {
+    const preparedImage = image.length == 0 ? null : image;
+
+    if (!image) {
+      continue;
+    }
+
+    imageStmt.run({
+      filename: preparedFilename,
+      src: preparedImage
+    });
+  }
 }
 
 export function getArticles() {
@@ -152,6 +175,13 @@ create table author (
   filename text not null,
   author text not null
 );
+
+drop table if exists image;
+
+create table image (
+  filename text not null,
+  src text not null
+);
 `;
 
 const DB_INSERT_ARTICLE = `
@@ -167,6 +197,11 @@ values(:filename, :tag);
 const DB_INSERT_AUTHOR = `
 insert into author (filename, author) 
 values(:filename, :author);
+`;
+
+const DB_INSERT_IMAGE = `
+insert into image (filename, src) 
+values(:filename, :src);
 `;
 
 const DB_SELECT_ARTICLE = `
