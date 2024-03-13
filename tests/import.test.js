@@ -71,3 +71,17 @@ test('htmlToArticle — 10036.html', () => {
   expect(article.filename).toBe('10036.md');
   expect(article.content).toBe(destContent);
 });
+
+test('htmlToArticle — 1298.html', () => {
+  const source = fs.readFileSync('./tests/fixtures/import/1298.html', "utf8");
+  const destContent = fs.readFileSync('./tests/fixtures/import/1298.md', "utf8");
+
+  const article = htmlToArticle(source, '1298.html');
+
+  expect(article.title).toBe('Маразм крепчает');
+  expect(article.date).toBe('2009-08-06');
+  expect(article.authorRaw).toBe('К. Дымов');
+  expect(article.tags).toEqual(['история', 'культура', 'общество']);
+  expect(article.filename).toBe('1298.md');
+  expect(article.content).toBe(destContent);
+});
