@@ -38,6 +38,7 @@ export function htmlToArticle(html, filename, authorReplace) {
   authorNode.remove();
   tagsNode.remove();
 
+  prepareHr(articleNode);
   prepareLinks(articleNode, filename);
   prepareStrong(articleNode);
   prepareEm(articleNode);
@@ -240,4 +241,16 @@ function isFootnoteLink(url, pageFilename) {
     || url.hash.endsWith('sym')
     || url.hash.startsWith('#_ftn')
   );
+}
+
+function prepareHr(element) {
+  const pElements = element.querySelectorAll('p');
+
+  for (const p of pElements) {
+    if (p.textContent.trim() != '***') {
+      continue;
+    }
+
+    p.innerHTML = '***';
+  }
 }
