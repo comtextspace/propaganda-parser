@@ -215,6 +215,7 @@ from
 where
   if.filename is null
 order BY 
+  cnt desc,
   au.author;
 `;
 
