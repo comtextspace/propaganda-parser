@@ -260,6 +260,6 @@ function prepareLi(element) {
   const liElements = element.querySelectorAll('li');
 
   for (const li of liElements) {
-    li.textContent = '* ' + li.textContent;
+    li.innerHTML = '* ' + li.textContent.replace('\n', '');
   }
 }
