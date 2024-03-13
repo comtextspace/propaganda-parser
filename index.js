@@ -4,7 +4,7 @@ import path from 'path';
 import { Command } from 'commander';
 
 import {openDb, closeDb, createSchema} from './source/data.js';
-import {makeFiles, makeIndex, makeTagIndex, makeAuthorIndex} from './source/export.js';
+import {makeFiles, makeIndex, makeTagIndex, makeAuthorIndex, moveImages} from './source/export.js';
 import {readFiles} from './source/import.js';
 
 const INPUT_PATH = './site/';
@@ -28,8 +28,9 @@ program.command('import')
 program.command('export')
   .description('Экспорт страниц из БД sqlite в Markdown-файлы')
   .option('-dest, --dest <string>', 'Каталог куда сохранять файлы', OUTPUT_PATH)
+  .option('-s, --source <string>', 'Каталог с исходными файлами', INPUT_PATH)
   .action((options) => {
-    exportFromDb(options.dest);
+    exportFromDb(options.source, options.dest);
   });
 
 program.parse();
@@ -49,15 +50,17 @@ function importInDb(sourcePath, showBadFiles) {
   closeDb();
 }
 
-function exportFromDb(destPath) {
+function exportFromDb(sourcePath, destPath) {
   openDb();
 
+  console.log(`start export from path ${sourcePath}`);
   console.log(`start export in path ${destPath}`);
 
   makeFiles(destPath);
   makeIndex(destPath);
   makeTagIndex(destPath);
   makeAuthorIndex(destPath);
+  moveImages(sourcePath, destPath);
     
   console.log('finish export');
   closeDb();

@@ -281,11 +281,16 @@ function prepareImg(element) {
     img.innerHTML = `![${preparedAlt}](${src})\n\n`;
 
     if (isLocalImage(src)) {
-      localImages.push(src);
+      const preparedSrc = prepareSrc(src);
+      localImages.push(preparedSrc);
     }
   }
 
   return localImages;
+}
+
+function prepareSrc(src) {
+  return 'images/' + path.parse(src).base;
 }
 
 function isLocalImage(src) {

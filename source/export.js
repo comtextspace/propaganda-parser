@@ -3,7 +3,7 @@ import path from 'path';
 
 /* Project modules */
 
-import {getArticles, getArticleIndex, getTagIndex, getAuthorIndex} from './data.js';
+import {getArticles, getArticleIndex, getTagIndex, getAuthorIndex, getImages} from './data.js';
 
 /* Constants */
 
@@ -103,6 +103,17 @@ export function makeTagIndex(outPath) {
   
     const fullFilename = path.join(outPath, tagFilename + '.md');
     fs.writeFileSync(fullFilename, tagPageContent);
+  }
+}
+
+export function moveImages(sourcePath, destPath) {
+  const images = getImages();
+
+  for (const {src} of images) {
+    const sourceName = path.join(sourcePath, path.parse(src).base);
+    const destName = path.join(destPath, src);
+    
+    fs.copyFileSync(sourceName, destName);
   }
 }
 

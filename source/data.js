@@ -120,6 +120,11 @@ export function getArticles() {
   return stmt.all();
 }
 
+export function getImages() {
+  const stmt = db.prepare(DB_SELECT_IMAGE);
+  return stmt.all();
+}
+
 export function getArticleIndex() {
   const stmt = db.prepare(DB_SELECT_ARTICLE_INDEX);
   return stmt.all();
@@ -202,6 +207,14 @@ values(:filename, :author);
 const DB_INSERT_IMAGE = `
 insert into image (filename, src) 
 values(:filename, :src);
+`;
+
+const DB_SELECT_IMAGE = `
+select
+  filename,
+  src
+from
+  image;
 `;
 
 const DB_SELECT_ARTICLE = `
