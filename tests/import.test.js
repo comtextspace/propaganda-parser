@@ -57,3 +57,17 @@ test('htmlToArticle — 10029.html', () => {
   expect(article.filename).toBe('10029.md');
   expect(article.content).toBe(destContent);
 });
+
+test('htmlToArticle — 10036.html', () => {
+  const source = fs.readFileSync('./tests/fixtures/import/10036.html', "utf8");
+  const destContent = fs.readFileSync('./tests/fixtures/import/10036.md', "utf8");
+
+  const article = htmlToArticle(source, '10036.html');
+
+  expect(article.title).toBe('Мир иллюзий. Реакция под видом революции');
+  expect(article.date).toBe('2017-04-10');
+  expect(article.authorRaw).toBe('Павел Богдан');
+  expect(article.tags).toEqual(['дискуссия', 'культура']);
+  expect(article.filename).toBe('10036.md');
+  expect(article.content).toBe(destContent);
+});
