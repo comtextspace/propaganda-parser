@@ -272,6 +272,8 @@ function prepareImg(element) {
     const src = img.attributes['src']?.trim();
     const alt = img.attributes['alt']?.trim();
 
-    img.innerHTML = `![${alt}](${src})\n\n`;
+    const preparedAlt = alt?.replaceAll('[', '').replaceAll(']', '');
+
+    img.innerHTML = `![${preparedAlt}](${src})\n\n`;
   }
 }
