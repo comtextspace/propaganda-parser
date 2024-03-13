@@ -185,7 +185,7 @@ insert into author_replace values ('Борис Габрук', 'Борис Габ
 insert into author_replace values ('Борис Лыс', 'Борис Лыс');
 insert into author_replace values ('Борис Новиков', 'Борис Новиков');
 insert into author_replace values ('Борис Рожин', 'Борис Рожин');
-insert into author_replace values ('В. A.  Босенко', 'В. A. Босенко');
+insert into author_replace values ('В. A.  Босенко', 'В. А. Босенко');
 insert into author_replace values ('В. А. Босенко', 'В. А. Босенко');
 insert into author_replace values ('В. Афанасьев', 'В. Афанасьев');
 insert into author_replace values ('В. Дмитрук', 'В. Дмитрук');
