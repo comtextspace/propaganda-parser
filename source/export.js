@@ -11,7 +11,9 @@ const INDEX_FILENAME = 'index.md';
 const TAG_FILENAME = 'tags.md';
 const AUTHOR_FILENAME = 'authors.md';
 
-const INDEX_HEADER = `# Архив сайта журнала Пропаганда (propaganda-journal.net)
+const INDEX_HEADER = `# Архив сайта журнала «Пропаганда»
+
+Старый адрес журнала: [propaganda-journal.net](https://propaganda-journal.net)
 
 * [Об архиве](/static/about.md)
 * [Список авторов](${AUTHOR_FILENAME})
