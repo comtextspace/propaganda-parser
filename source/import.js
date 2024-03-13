@@ -42,6 +42,7 @@ export function htmlToArticle(html, filename, authorReplace) {
   prepareLinks(articleNode, filename);
   prepareStrong(articleNode);
   prepareEm(articleNode);
+  prepareLi(articleNode);
         
   const articleText = articleNode.text.trim().replaceAll('\n', '\n\n');
   const content = prepareContent(articleText);
@@ -252,5 +253,13 @@ function prepareHr(element) {
     }
 
     p.innerHTML = '***';
+  }
+}
+
+function prepareLi(element) {
+  const liElements = element.querySelectorAll('li');
+
+  for (const li of liElements) {
+    li.textContent = '* ' + li.textContent;
   }
 }
