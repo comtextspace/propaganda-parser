@@ -263,7 +263,8 @@ where
   if.filename is null
 order BY 
   cnt desc,
-  au.author;
+  au.author,
+  a.date;
 `;
 
 const DB_SELECT_TAG_INDEX = `
