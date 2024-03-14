@@ -193,7 +193,6 @@ function prepareEm(element) {
 
 function prepareLinks(element, pageFilename) {
   const DUMMY_URL = 'http://test345245657.ru';
-  const footnotesVisited = new Set();
 
   const links = element.querySelectorAll('a');
 
@@ -217,10 +216,13 @@ function prepareLinks(element, pageFilename) {
         ? ': ' : '';
       
       const footnoteLink = `[^${preparedFootnoteNumber}]` + footnoteMark;
-  
-      footnotesVisited.add(footnoteNumber);
       
       link.textContent = footnoteLink;
+
+      // TODO нет обработки многострочных примечаний.
+      // Вероятно, для их добавления проще парсить готовый MD 
+      // и добавлять их между примечаниями (примечания всегда в конце списком)
+
     } else {
 
       if (link.textContent.length == 0) {
@@ -236,7 +238,11 @@ function prepareLinks(element, pageFilename) {
           shortUrl        
           .replaceAll('.html', '.md')
           .replaceAll('.htm', '.md');
-     
+
+      // TODO Полезно, добавить обработку особых ссылок 
+      // library.php.html
+      // /index.html
+
         link.textContent = `[${link.textContent}](${preparedUrl})`;
         continue;
       }
