@@ -247,13 +247,9 @@ function prepareLinks(element, pageFilename) {
 }
 
 function prepareUrlFromLink(url) {
-  if (!(url.startsWith('https://propaganda-journal.net') 
-     || url.startsWith('http://propaganda-journal.net'))) {
-    return url;
-  }
+  const match = url.match(/^https?:\/\/propaganda-journal.net\/\d+.html?$/);
 
-  if (!(url.endsWith('.html') 
-    || url.endsWith('.htm'))) {
+  if (!match) {
     return url;
   }
 
