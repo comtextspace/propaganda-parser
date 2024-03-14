@@ -230,11 +230,13 @@ function prepareLinks(element, pageFilename) {
       const originUrl = url.toString();
 
       if (originUrl.startsWith(DUMMY_URL)) {
-        const preparedUrl = originUrl
-        .replace(DUMMY_URL, '')
-        .replaceAll('.html', '.md')
-        .replaceAll('.htm', '.md');
+        const shortUrl = originUrl.replace(DUMMY_URL, '');
 
+        const preparedUrl = !shortUrl.match(/\/\d+\.html?/) ? shortUrl :
+          shortUrl        
+          .replaceAll('.html', '.md')
+          .replaceAll('.htm', '.md');
+     
         link.textContent = `[${link.textContent}](${preparedUrl})`;
         continue;
       }
