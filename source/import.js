@@ -232,16 +232,38 @@ function prepareLinks(element, pageFilename) {
       if (originUrl.startsWith(DUMMY_URL)) {
         const preparedUrl = originUrl
         .replace(DUMMY_URL, '')
-        .replaceAll('.html', '.md');
+        .replaceAll('.html', '.md')
+        .replaceAll('.htm', '.md');
 
         link.textContent = `[${link.textContent}](${preparedUrl})`;
         continue;
       }
 
-      link.textContent = `[${link.textContent}](${originUrl})`;
+      const preparedUrl = prepareUrlFromLink(originUrl);
+      link.textContent = `[${link.textContent}](${preparedUrl})`;
     }
 
   }
+}
+
+function prepareUrlFromLink(url) {
+  if (!(url.startsWith('https://propaganda-journal.net') 
+     || url.startsWith('http://propaganda-journal.net'))) {
+    return url;
+  }
+
+  if (!(url.endsWith('.html') 
+    || url.endsWith('.htm'))) {
+    return url;
+  }
+
+  const preparedUrl = url
+    .replaceAll('https://propaganda-journal.net', '')
+    .replaceAll('http://propaganda-journal.net', '')
+    .replace(/\.htm$/, '.md')
+    .replace(/\.html$/, '.md');
+
+  return preparedUrl;
 }
 
 function isFootnoteLink(url, pageFilename) {
