@@ -217,10 +217,18 @@ values(:filename, :src);
 
 const DB_SELECT_IMAGE = `
 select
-  filename,
-  src
+  i.filename,
+  i.src
 from
-  image;
+  image i left join ignore_files if
+    on i.filename = if.filename
+where
+  if.filename is null 
+  and not exists (
+    select * from 
+    tag t join ignore_tag it 
+    on t.tag = it.tag 
+    where t.filename = i.filename);
 `;
 
 const DB_SELECT_ARTICLE = `
