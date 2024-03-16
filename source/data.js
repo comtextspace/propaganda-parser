@@ -187,6 +187,12 @@ create table image (
   filename text not null,
   src text not null
 );
+
+drop table if exists ignore_tag;
+
+create table ignore_tag (
+  tag text not null
+);
 `;
 
 const DB_INSERT_ARTICLE = `
@@ -233,6 +239,11 @@ from
     a.filename = if.filename
 where
   if.filename is null
+  and not exists (
+    select * from 
+    tag t join ignore_tag it 
+    on t.tag = it.tag 
+    where t.filename = a.filename)
 `;
 
 const DB_SELECT_ARTICLE_INDEX = `
@@ -246,6 +257,11 @@ from
     a.filename = if.filename
 where
   if.filename is null
+  and not exists (
+    select * from 
+    tag t join ignore_tag it 
+    on t.tag = it.tag 
+    where t.filename = a.filename)
 order by 
   a.date desc, 
   a.title;
@@ -265,6 +281,11 @@ from
     a.filename = if.filename
 where
   if.filename is null
+  and not exists (
+    select * from 
+    tag t join ignore_tag it 
+    on t.tag = it.tag 
+    where t.filename = a.filename)
 order BY 
   cnt desc,
   au.author,
@@ -285,6 +306,7 @@ from
     a.filename = if.filename
 where
   if.filename is null
+  and not exists (select * from ignore_tag ig where ig.tag = t.tag)
 order BY 
   t.tag,
   a.date desc;
@@ -372,4 +394,8 @@ values
 
 -- Заметки по поводу эффективности самообразовательных сообществ
 ('10650.md');
+
+insert into ignore_tag(tag) values
+('события+комментарии');
+
 `;
