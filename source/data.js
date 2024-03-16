@@ -222,7 +222,11 @@ select
   a.filename,
   a.title, 
   a.date, 
-  a.author_raw as authorRaw, 
+  a.author_raw as authorRaw,
+  (select distinct group_concat(au.author, ', ') 
+    OVER (PARTITION by au.filename) 
+    AS group_concat FROM author au 
+    where a.filename  = au.filename ) as authors, 
   a.content
 from
   article a left join ignore_files if on

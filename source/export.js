@@ -125,30 +125,35 @@ function tagToFilename(tag) {
   return tag.replace(/\+/gi, '_').replace(/\s/gi, '_').toLowerCase();
 }
 
-function makeArticle({title, date, authorRaw, content}) {
-  const article = makeYAML(title, date, authorRaw) 
+function makeArticle({title, date, authorRaw, authors, content}) {
+  const article = makeYAML(title, date, authors) 
     + '\n\n'
-    + makeHeader(title, date, authorRaw)
+    + makeHeader(title, date, authorRaw, authors)
     + '\n\n'
     + escapeContentForVuepress(content);
 
   return article;
 }
 
-function makeYAML(title, date, authorRaw) {
+// TODO форматирование author в YAML нужно переделать в список
+
+function makeYAML(title, date, authors) {
   return '' +
 `---
 title: "${escapeYamlFiled(title)}"
 date: "${escapeYamlFiled(date)}"
-author: "${escapeYamlFiled(prepareAuthorRaw(authorRaw))}"
+author: "${escapeYamlFiled(prepareAuthorRaw(authors))}"
 ---`;
 }
 
-function makeHeader(title, date, authorRaw) {
+function makeHeader(title, date, authorRaw, authors) {
+  const preparedAuthors = authors && authors != authorRaw 
+    ? ` (${authors})` : '';
+
   return '' +
 `# ${title}
 
-**${date}** ${prepareAuthorRaw(authorRaw)}`;
+**${date}** ${prepareAuthorRaw(authorRaw)}${preparedAuthors}`;
 }
 
 function prepareAuthorRaw(text) {
