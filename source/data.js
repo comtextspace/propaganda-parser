@@ -282,7 +282,8 @@ from
 where
   if.filename is null
 order BY 
-  t.tag;
+  t.tag,
+  a.date desc;
 `;
 
 const DB_SELECT_AUTHOR_REPLACE = `
