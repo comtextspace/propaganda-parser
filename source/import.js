@@ -243,6 +243,10 @@ function prepareLinks(element, pageFilename) {
       // library.php.html
       // /index.html
 
+      // TOOD добавить обработку ошибочных ссылок примечаний
+      // на элементы doc-документа, такие есть в статье 9455.html
+      // Их можно автоматически заменять на md-примечания
+
         link.textContent = `[${link.textContent}](${preparedUrl})`;
         continue;
       }
