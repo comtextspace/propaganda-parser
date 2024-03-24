@@ -214,6 +214,7 @@ function prepareLinks(element, pageFilename) {
 
       const footnoteMark = linkHash.endsWith('anc') 
       || linkHash.startsWith('#_ftnref') 
+      || linkHash.startsWith('#_ednref') 
         ? ': ' : '';
       
       const footnoteLink = `[^${preparedFootnoteNumber}]` + footnoteMark;
@@ -243,10 +244,6 @@ function prepareLinks(element, pageFilename) {
       // TODO Полезно, добавить обработку особых ссылок 
       // library.php.html
       // /index.html
-
-      // TOOD добавить обработку ошибочных ссылок примечаний
-      // на элементы doc-документа, такие есть в статье 9455.html
-      // Их можно автоматически заменять на md-примечания
 
         link.textContent = `[${link.textContent}](${preparedUrl})`;
         continue;
@@ -286,6 +283,7 @@ function isFootnoteLink(url, pageFilename) {
   return (url.hash.endsWith('anc')
     || url.hash.endsWith('sym')
     || url.hash.startsWith('#_ftn') // обратная ссылка #_ftnref
+    || url.hash.startsWith('#_edn') // обратная ссылка #_ednref
   );
 } 
 
