@@ -132,3 +132,19 @@ test('htmlToArticle — 9455.html', () => {
   expect(article.images).toEqual([]);
   expect(article.content).toBe(destContent);
 });
+
+test('htmlToArticle — 9689.html', () => {
+  const source = fs.readFileSync('./tests/fixtures/import/9689.html', "utf8");
+  const destContent = fs.readFileSync('./tests/fixtures/import/9689.md', "utf8");
+
+  const article = htmlToArticle(source, '9689.html', authorReplace);
+
+  expect(article.title).toBe('Несчастная любовь и современный мир. Часть 2.');
+  expect(article.date).toBe('2015-08-14');
+  expect(article.authorRaw).toBe('Александр Гавва');
+  expect(article.authors).toEqual(['Александр Гавва']);
+  expect(article.tags).toEqual(['общество', 'теория']);
+  expect(article.filename).toBe('9689.md');
+  expect(article.images).toEqual([]);
+  expect(article.content).toBe(destContent);
+});
