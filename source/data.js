@@ -17,6 +17,7 @@ let authorReplace = null;
 
 export function openDb() {
   db = new Sqlite3(DB_FILENAME);
+  db.pragma('journal_mode = WAL');
 }
 
 export function closeDb() {
