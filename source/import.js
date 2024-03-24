@@ -212,7 +212,8 @@ function prepareLinks(element, pageFilename) {
       const footnoteNumber = link.textContent;
       const preparedFootnoteNumber = footnoteNumber.replace('[', '').replace(']', '');
 
-      const footnoteMark = linkHash.endsWith('anc') || linkHash.startsWith('#_ftnref') 
+      const footnoteMark = linkHash.endsWith('anc') 
+      || linkHash.startsWith('#_ftnref') 
         ? ': ' : '';
       
       const footnoteLink = `[^${preparedFootnoteNumber}]` + footnoteMark;
@@ -276,15 +277,17 @@ function prepareUrlFromLink(url) {
 
 function isFootnoteLink(url, pageFilename) {
 
-  if (url.pathname != '/' + pageFilename) {
+  if ((url.pathname != '/' + pageFilename)
+      && (url.protocol != 'file:')
+  ) {
     return false;
   }
 
   return (url.hash.endsWith('anc')
     || url.hash.endsWith('sym')
-    || url.hash.startsWith('#_ftn')
+    || url.hash.startsWith('#_ftn') // обратная ссылка #_ftnref
   );
-}
+} 
 
 function prepareHr(element) {
   const pElements = element.querySelectorAll('p');
