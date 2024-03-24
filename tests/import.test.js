@@ -115,3 +115,20 @@ test('htmlToArticle — 10145.html', () => {
   expect(article.images).toEqual([]);
   expect(article.content).toBe(destContent);
 });
+
+
+test('htmlToArticle — 9455.html', () => {
+  const source = fs.readFileSync('./tests/fixtures/import/9455.html', "utf8");
+  const destContent = fs.readFileSync('./tests/fixtures/import/9455.md', "utf8");
+
+  const article = htmlToArticle(source, '9455.html', authorReplace);
+
+  expect(article.title).toBe('Чтобы свои не стреляли в своих (ответ рецензентам)');
+  expect(article.date).toBe('2015-02-19');
+  expect(article.authorRaw).toBe('Włodzimierz Podlipski');
+  expect(article.authors).toEqual(['Włodzimierz Podlipski']);
+  expect(article.tags).toEqual(['политика']);
+  expect(article.filename).toBe('9455.md');
+  expect(article.images).toEqual([]);
+  expect(article.content).toBe(destContent);
+});
